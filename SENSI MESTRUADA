@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel Ultra</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(120deg, #0a0a0a, #1a1a1a);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      z-index: 1;
+      position: relative;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .painel, .login {
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 90%;
+      margin: auto;
+      box-shadow: 0 0 25px cyan;
+    }
+
+    .painel {
+      display: none;
+    }
+
+    input[type="password"] {
+      padding: 15px;
+      border-radius: 12px;
+      border: none;
+      font-size: 18px;
+      width: 80%;
+      margin-top: 10px;
+      outline: none;
+    }
+
+    button {
+      margin: 15px auto;
+      padding: 14px 30px;
+      font-size: 18px;
+      border-radius: 15px;
+      border: 2px solid cyan;
+      background: black;
+      color: cyan;
+      cursor: pointer;
+      transition: 0.3s;
+      animation: pulsar 2s infinite;
+    }
+
+    button:hover {
+      background: cyan;
+      color: black;
+    }
+
+    .borda-ativa {
+      box-shadow: 0 0 20px lime, 0 0 40px lime;
+      border-color: lime;
+      background: black;
+      color: lime;
+    }
+
+    @keyframes pulsar {
+      0%, 100% {
+        box-shadow: 0 0 10px cyan;
+      }
+      50% {
+        box-shadow: 0 0 30px cyan;
+      }
+    }
+
+    h1, h2 {
+      text-shadow: 0 0 10px cyan;
+    }
+  </style>
+</head>
+<body>
+<canvas id="neve"></canvas>
+
+<div class="container">
+  <div class="login">
+    <h2>🔐 Digite a senha</h2>
+    <input type="password" id="senha" placeholder="Senha...">
+    <br><br>
+    <button onclick="verificarSenha()">Entrar</button>
+  </div>
+
+  <div class="painel">
+    <h2>🎮 Painel de Funções</h2>
+    <button onclick="toggleAtivo(this)">Aimbot</button>
+    <button onclick="toggleAtivo(this)">ESP (Parede)</button>
+    <button onclick="toggleAtivo(this)">No Recoil</button>
+    <button onclick="abrirFreeFire()">Abrir Free Fire</button>
+  </div>
+</div>
+
+<script>
+  // Senha
+  function verificarSenha() {
+    const s = document.getElementById("senha").value;
+    if (s === "senha123") {
+      document.querySelector(".login").style.display = "none";
+      document.querySelector(".painel").style.display = "block";
+    } else {
+      alert("Senha incorreta!");
+    }
+  }
+
+  // Ativação de botões
+  function toggleAtivo(btn) {
+    btn.classList.toggle("borda-ativa");
+    if (btn.classList.contains("borda-ativa")) {
+      btn.textContent += " ✅";
+    } else {
+      btn.textContent = btn.textContent.replace(" ✅", "");
+    }
+  }
+
+  // Abrir Free Fire direto pela Play Store
+  function abrirFreeFire() {
+    window.location.href = "intent://details?id=com.dts.freefireth#Intent;scheme=market;package=com.android.vending;end";
+  }
+
+  // Neve animada
+  const canvas = document.getElementById("neve");
+  const ctx = canvas.getContext("2d");
+  let width = window.innerWidth;
+  let height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+
+  let flocos = [];
+  for (let i = 0; i < 100; i++) {
+    flocos.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 3 + 1,
+      d: Math.random() + 0.5
+    });
+  }
+
+  function desenharNeve() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    for (let f of flocos) {
+      ctx.moveTo(f.x, f.y);
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+    }
+    ctx.fill();
+    moverNeve();
+  }
+
+  function moverNeve() {
+    for (let f of flocos) {
+      f.y += f.d;
+      if (f.y > height) {
+        f.y = -5;
+        f.x = Math.random() * width;
+      }
+    }
+  }
+
+  setInterval(desenharNeve, 33);
+</script>
+</body>
+</html>
